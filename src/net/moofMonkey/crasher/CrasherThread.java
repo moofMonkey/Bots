@@ -64,7 +64,7 @@ public class CrasherThread extends Thread {
 		}
 	}
 
-	public static void sendCrash(DataOutputStream dos) throws IOException {
+	public static void sendCrash(DataOutputStream dos) throws IOException { // FIXME: Packet place block
 		dos.writeInt(1);
 		dos.writeByte(1);
 		dos.writeInt(1);
